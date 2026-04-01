@@ -1,5 +1,6 @@
 {% set name = "ISPC" %}
 {% set version = "1.30.0" %}
+{% set llvm_version = "21" %}
 
 package:
   name: {{ name|lower }}
