@@ -7,7 +7,7 @@ sed -i.bak 's|set(CMAKE_CXX_COMPILER|set(CMAKE_CXX_COMPILER_BAK|g' CMakeLists.tx
 
 cmake -S . -B build \ 
   ${CMAKE_ARGS} \
-  -DFILE_CHECK_EXECUTABLE=$BUILD_PREFIX/libexec/llvm/FileCheck \
+  -DFILE_CHECK_EXECUTABLE=$BUILD_PREFIX/bin/FileCheck \
   -DCLANG_EXECUTABLE=$BUILD_PREFIX/bin/clang \
   -DCLANGPP_EXECUTABLE=$BUILD_PREFIX/bin/clang++ \
   -DLLVM_DIS_EXECUTABLE=$BUILD_PREFIX/bin/llvm-dis \
