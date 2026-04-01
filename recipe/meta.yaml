@@ -8,8 +8,6 @@ package:
 source:
   url: https://github.com/ispc/ispc/archive/refs/tags/v{{ version }}.tar.gz
   sha256: 73b30c74fdfc56c3097015476df14d0a4bcb6705d9e286c6d51c1ed578d49e22
-  patches:
-    - skip_32.diff
 
 build:
   number: 0
