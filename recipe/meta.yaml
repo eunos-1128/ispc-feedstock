@@ -1,54 +1,70 @@
-{% set name = "ISPC" %}
-{% set version = "1.30.0" %}
-{% set llvm_version = "21" %}
+schema_version: 1
+
+context:
+  version: "1.30.0"
+  llvm_version: "21"
 
 package:
-  name: {{ name|lower }}
-  version: {{ version }}
+  name: ispc
+  version: ${{ version }}
 
 source:
-  url: https://github.com/ispc/ispc/archive/refs/tags/v{{ version }}.tar.gz
+  url: https://github.com/ispc/ispc/archive/refs/tags/v${{ version }}.tar.gz
   sha256: 73b30c74fdfc56c3097015476df14d0a4bcb6705d9e286c6d51c1ed578d49e22
 
 build:
   number: 0
-  skip: True  # [not linux]
+  skip: not linux
 
 requirements:
   build:
-    - {{ compiler('c') }}
-    - {{ compiler('cxx') }}
-    - {{ stdlib('c') }}
+    - ${{ compiler('c') }}
+    - ${{ compiler('cxx') }}
+    - ${{ stdlib('c') }}
     - python *
     - cmake
-    - make      # [unix]
-    - flex      # [unix]
-    - bison     # [unix]
-    - m2-flex   # [win]
-    - m2-bison  # [win]
-    - m2-m4     # [win]
-    - clang     {{ llvm_version }}.*  # [unix]
-    - clangxx   {{ llvm_version }}.*  # [unix]
-    - clangdev  {{ llvm_version }}.*
-    - llvmdev   {{ llvm_version }}.*
+    - clang     ${{ llvm_version }}.*
+    - clangxx   ${{ llvm_version }}.* 
+    - clangdev  ${{ llvm_version }}.*
+    - llvmdev   ${{ llvm_version }}.*
+    - if: unix
+      then:
+        - make
+        - flex
+        - bison
+    - if: win
+      then:
+        - m2-flex
+        - m2-bison
+        - m2-m4
+
   host:
-    - clangdev  {{ llvm_version }}.*
-    - llvmdev   {{ llvm_version }}.*
-    - llvm      {{ llvm_version }}.*
-    - ncurses   # [unix]
+    - clangdev  ${{ llvm_version }}.*
+    - llvmdev   ${{ llvm_version }}.*
+    - llvm      ${{ llvm_version }}.*
+    - if: unix
+      then: ncurses
     - zlib
 
-test:
-  commands:
-    - ispc --help
+tests:
+  - script:
+      - ispc --version
+      - ispc --help
 
 about:
-  home: https://ispc.github.io/
+  homepage: https://ispc.github.io
   license: BSD-3-Clause
   license_file: LICENSE.txt
   summary: 'Intel SPMD Program Compiler'
-  doc_url: https://ispc.github.io/documentation.html
-  dev_url: https://github.com/ispc/ispc
+  documentation: https://ispc.github.io/documentation.html
+  repository: https://github.com/ispc/ispc
+  description: |
+    `ispc` is a compiler for a variant of the C programming language, with
+    extensions for [single program, multiple
+    data](http://en.wikipedia.org/wiki/SPMD) programming.  Under the SPMD model,
+    the programmer writes a program that generally appears to be a regular serial
+    program, though the execution model is actually that a number of *program
+    instances* execute in parallel on the hardware.
 
 extra:
   recipe-maintainers:
