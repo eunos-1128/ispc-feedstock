@@ -1,7 +1,7 @@
 #!/bin/bash
 set -exo pipefail
 
-cmake -S . -B build \ 
+cmake -S . -B build \
   ${CMAKE_ARGS} \
   -DFILE_CHECK_EXECUTABLE=${BUILD_PREFIX}/libexec/llvm/FileCheck \
   -DARM_ENABLED=OFF \
