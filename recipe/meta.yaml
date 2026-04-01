@@ -26,7 +26,14 @@ requirements:
     - m2-flex   # [win]
     - m2-bison  # [win]
     - m2-m4     # [win]
+    - clang     {{ llvm_version }}.*  # [unix]
+    - clangxx   {{ llvm_version }}.*  # [unix]
+    - clangdev  {{ llvm_version }}.*
+    - llvmdev   {{ llvm_version }}.*
   host:
+    - clangdev  {{ llvm_version }}.*
+    - llvmdev   {{ llvm_version }}.*
+    - llvm      {{ llvm_version }}.*
     - ncurses   # [unix]
     - zlib
 
