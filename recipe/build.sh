@@ -1,17 +1,15 @@
 #!/bin/bash
 set -exo pipefail
 
-# Use our compilers instead of clang/clang++
-sed -i.bak 's|set(CMAKE_C_COMPILER|set(CMAKE_C_COMPILER_BAK|g' CMakeLists.txt
-sed -i.bak 's|set(CMAKE_CXX_COMPILER|set(CMAKE_CXX_COMPILER_BAK|g' CMakeLists.txt
-
 cmake -S . -B build \ 
   ${CMAKE_ARGS} \
   -DFILE_CHECK_EXECUTABLE=${BUILD_PREFIX}/libexec/llvm/FileCheck \
-  -DLLVM_TOOLS_BINARY_DIR=${BUILD_PREFIX}/bin \
   -DARM_ENABLED=OFF \
   -DISPC_NO_DUMPS=ON \
-  -DISPC_SLIM_BINARY=ON
+  -DISPC_SLIM_BINARY=ON \
+  -DISPC_INCLUDE_TESTS=ON \
+  -DISPC_INCLUDE_EXAMPLES=OFF \
+  -DISPC_INCLUDE_RT=OFF
 cmake --build build --parallel ${CPU_COUNT}
 cmake --install build
 
