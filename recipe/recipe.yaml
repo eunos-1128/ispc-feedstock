@@ -1,0 +1,72 @@
+schema_version: 1
+
+context:
+  version: "1.30.0"
+  llvm_version: "21"
+
+package:
+  name: ispc
+  version: ${{ version }}
+
+source:
+  url: https://github.com/ispc/ispc/archive/refs/tags/v${{ version }}.tar.gz
+  sha256: 73b30c74fdfc56c3097015476df14d0a4bcb6705d9e286c6d51c1ed578d49e22
+
+build:
+  number: 0
+  skip: not linux
+
+requirements:
+  build:
+    - ${{ compiler('c') }}
+    - ${{ compiler('cxx') }}
+    - ${{ stdlib('c') }}
+    - python *
+    - cmake
+    - clang     ${{ llvm_version }}.*
+    - clangxx   ${{ llvm_version }}.* 
+    - clangdev  ${{ llvm_version }}.*
+    - llvmdev   ${{ llvm_version }}.*
+    - if: unix
+      then:
+        - make
+        - flex
+        - bison
+    - if: win
+      then:
+        - m2-flex
+        - m2-bison
+        - m2-m4
+
+  host:
+    - clangdev  ${{ llvm_version }}.*
+    - llvmdev   ${{ llvm_version }}.*
+    - llvm      ${{ llvm_version }}.*
+    - if: unix
+      then: ncurses
+    - zlib
+
+tests:
+  - script:
+      - ispc --version
+      - ispc --help
+
+about:
+  homepage: https://ispc.github.io
+  license: BSD-3-Clause
+  license_file: LICENSE.txt
+  summary: 'Intel SPMD Program Compiler'
+  documentation: https://ispc.github.io/documentation.html
+  repository: https://github.com/ispc/ispc
+  description: |
+    `ispc` is a compiler for a variant of the C programming language, with
+    extensions for [single program, multiple
+    data](http://en.wikipedia.org/wiki/SPMD) programming.  Under the SPMD model,
+    the programmer writes a program that generally appears to be a regular serial
+    program, though the execution model is actually that a number of *program
+    instances* execute in parallel on the hardware.
+
+extra:
+  recipe-maintainers:
+    - isuruf
+    - eunos-1128
