@@ -13,8 +13,7 @@ source:
   sha256: 73b30c74fdfc56c3097015476df14d0a4bcb6705d9e286c6d51c1ed578d49e22
 
 build:
-  number: 0
-  skip: not linux
+  number: 1
 
 requirements:
   build:
@@ -23,10 +22,10 @@ requirements:
     - ${{ stdlib('c') }}
     - python *
     - cmake
-    - clang     ${{ llvm_version }}.*
-    - clangxx   ${{ llvm_version }}.* 
-    - clangdev  ${{ llvm_version }}.*
-    - llvmdev   ${{ llvm_version }}.*
+    - if: not osx
+      then:
+        - clang     ${{ llvm_version }}.*
+        - clangxx   ${{ llvm_version }}.* 
     - if: unix
       then:
         - make
@@ -34,22 +33,31 @@ requirements:
         - bison
     - if: win
       then:
-        - m2-flex
+        - jom
         - m2-bison
+        - m2-flex
         - m2-m4
-
   host:
+    - ${{ "ncurses" if unix }}
+    - ${{ "zstd-static" if win }}
     - clangdev  ${{ llvm_version }}.*
     - llvmdev   ${{ llvm_version }}.*
     - llvm      ${{ llvm_version }}.*
-    - if: unix
-      then: ncurses
     - zlib
+    - zstd
 
 tests:
   - script:
-      - ispc --version
-      - ispc --help
+      - if: unix
+        then: |
+          ispc --version
+          ispc --help
+      - if: win
+        then: |
+          ispc --version
+          if %ERRORLEVEL% neq 0 exit /b 1
+          ispc --help
+          if %ERRORLEVEL% neq 0 exit /b 1
 
 about:
   homepage: https://ispc.github.io

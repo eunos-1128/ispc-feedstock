@@ -6,3 +6,9 @@ conda_build:
   pkg_format: '2'
 conda_install_tool: pixi
 conda_build_tool: rattler-build
+provider:
+  linux_aarch64: default
+  # Enable after PPC64LE is supported in ISPC
+  #linux_ppc64le: default
+  osx_arm64: default
+test: native_and_emulated
